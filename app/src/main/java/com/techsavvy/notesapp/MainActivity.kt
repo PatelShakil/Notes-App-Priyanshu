@@ -17,7 +17,6 @@ import com.techsavvy.notesapp.ui.theme.NotesAppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             NotesAppTheme {
                 NotesApp()
