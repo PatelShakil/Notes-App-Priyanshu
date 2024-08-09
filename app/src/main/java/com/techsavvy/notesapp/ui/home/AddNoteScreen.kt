@@ -78,12 +78,12 @@ fun AddNoteScreen(
         createNotificationChannel(context)
     }
 
-    LaunchedEffect(content) {
-        if (content.isNotEmpty()) {
+    LaunchedEffect(content,title) {
+        if (content.isNotEmpty() && title.isNotEmpty()) {
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastNotificationTime >= reminderTime * 1000L) {
                 lastNotificationTime = currentTime
-                showHighPriorityNotification(context, "Unsaved Note", "You typed: $content")
+                showHighPriorityNotification(context, title, content)
             }
         }
     }
@@ -158,7 +158,7 @@ fun AddNoteScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 8.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -173,7 +173,7 @@ fun AddNoteScreen(
         HorizontalDivider(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .padding(bottom = 10.dp),
+                .padding(bottom = 5.dp),
         )
 
         TextField(
@@ -185,12 +185,12 @@ fun AddNoteScreen(
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 10.dp)
+                    modifier = Modifier.padding(0.dp)
                 )
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(horizontal = 8.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
@@ -208,7 +208,7 @@ fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val name = "Notes Notifications"
         val descriptionText = "Notifications for unsaved notes"
-        val importance = NotificationManager.IMPORTANCE_HIGH // High importance
+        val importance = NotificationManager.IMPORTANCE_LOW // High importance
         val channel = NotificationChannel("notes_channel", name, importance).apply {
             description = descriptionText
             enableLights(true)
@@ -233,11 +233,11 @@ fun showHighPriorityNotification(context: Context, title: String, content: Strin
         .setSmallIcon(R.drawable.ic_notification)
         .setContentTitle(title)
         .setContentText(content)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setPriority(NotificationCompat.PRIORITY_LOW)
         .setDefaults(NotificationCompat.DEFAULT_ALL)
         .setContentIntent(pendingIntent) // Set the intent that will fire when the user taps the notification
         .setAutoCancel(true) // Automatically removes the notification when the user taps it
-        .setFullScreenIntent(pendingIntent, true) // Attempt to make it full screen
+//        .setFullScreenIntent(pendingIntent, true) // Attempt to make it full screen
         .build()
 
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

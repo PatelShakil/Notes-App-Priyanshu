@@ -62,7 +62,8 @@ fun SettingsScreen(navController: NavController, onSaveReminderTime: (Int) -> Un
                             contentDescription = null
                         )
                     }
-                }
+                },
+                singleLine = true
             )
         }
     }

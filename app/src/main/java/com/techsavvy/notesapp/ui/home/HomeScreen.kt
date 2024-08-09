@@ -81,7 +81,7 @@ fun HomeScreen(navController: NavController) {
         TopAppBar(
             title = {
                 Text(
-                    text = "Notes App",
+                    text = "Notes",
                     modifier = Modifier.clickable {
                         val currentTime = System.currentTimeMillis()
                         if (currentTime - lastClickTime < 300) {
@@ -94,9 +94,11 @@ fun HomeScreen(navController: NavController) {
         )
     },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("add_note_screen") },
+            FloatingActionButton(onClick = { navController.navigate("add_note_screen")},
+                containerColor = Color(0xFFEC0421),
                 modifier =Modifier.padding(20.dp)) {
-                Icon(Icons.Default.Add, contentDescription = "Add Note")
+                Icon(Icons.Default.Add, contentDescription = "Add Note",
+                    tint = Color.White)
             }
         }
     ) {
