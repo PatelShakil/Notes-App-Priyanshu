@@ -3,7 +3,9 @@ package com.techsavvy.notesapp.ui.home
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +25,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.techsavvy.notesapp.helpers.Note
 import com.techsavvy.notesapp.helpers.NotesPreferences
@@ -88,69 +93,122 @@ fun HomeScreen(navController: NavController) {
                             navController.navigate("settings")
                         }
                         lastClickTime = currentTime
-                    }
+                    },
+                    fontWeight = FontWeight.Bold
                 )
             }
         )
     },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("add_note_screen")},
+            FloatingActionButton(
+                onClick = { navController.navigate("add_note_screen") },
                 containerColor = Color(0xFFEC0421),
-                modifier =Modifier.padding(20.dp)) {
-                Icon(Icons.Default.Add, contentDescription = "Add Note",
-                    tint = Color.White)
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Icon(
+                    Icons.Default.Add, contentDescription = "Add Note",
+                    tint = Color.White
+                )
             }
         }
     ) {
 
-        LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.padding(it)) {
-            itemsIndexed(notes){index,note->
-                NoteItemGrid(note){
-                    navController.navigate("add_note_screen?id=${note.id}&title=${note.title}&content=${note.content}")
+        var isDelete by remember { mutableStateOf(false) }
+        var noteId by remember { mutableStateOf(0L) }
 
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            modifier = Modifier.padding(it)
+        ) {
+            itemsIndexed(notes) { index, note ->
+                NoteItemGrid(note, {
+                    navController.navigate("add_note_screen?id=${note.id}")
+                }) {
+                    isDelete = true
+                    noteId = note.id
                 }
             }
         }
+
+        if(isDelete){
+            AlertDialog(onDismissRequest = {
+                isDelete = false
+                noteId = 0L
+            }, confirmButton = {
+                Button(
+                    onClick ={
+                        notesPreferences.deleteNote(noteId)
+                        notes = notesPreferences.getNoteList()
+                        isDelete = false
+                        noteId = 0L
+                    }
+                ){
+                    Text("Delete")
+
+                }
+
+            }, dismissButton = { Button(
+                onClick ={
+
+                    isDelete = false
+                    noteId  = 0L
+                }
+            ){
+                Text("Cancel")
+
+            }}, title = {
+                Text(text = "Delete Note")
+            }, text = {
+                Text(text = "Are you sure you want to delete this note?")
+            })
+        }
+
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoteItemGrid(note : Note, onClick: () -> Unit) {
+fun NoteItemGrid(note: Note, onClick: () -> Unit, onLongClick: () -> Unit) {
     Box(
-        modifier= Modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp ,end = 10.dp, bottom = 15.dp),
+            .padding(start = 10.dp, end = 10.dp, bottom = 15.dp),
         contentAlignment = Center
-    ){
+    ) {
         Card(
-            modifier= Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(onLongClick = onLongClick, onClick = onClick),
             colors = CardDefaults.cardColors(Color(0xFFF5F5F5)),
             elevation = CardDefaults.cardElevation(2.dp),
             shape = RoundedCornerShape(20.dp),
-            onClick = onClick
         ) {
-            Column(modifier= Modifier.fillMaxWidth()
-                .padding(10.dp)
-                .padding(vertical = 5.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .padding(vertical = 5.dp)
+            ) {
                 Text(
-                text = SimpleDateFormat(
-                    "MMM dd yyyy ",
-                    Locale.getDefault()
-                ).format(Date(note.timestamp)),
-                style = MaterialTheme.typography.bodySmall,
-                modifier= Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                color = Color.Gray,
+                    text = SimpleDateFormat(
+                        "MMM dd yyyy ",
+                        Locale.getDefault()
+                    ).format(Date(note.timestamp)),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    color = Color.Gray,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold
 
-            )
-                Text(text = note.title, style = MaterialTheme.typography.bodyLarge, maxLines = 2,
-                    fontWeight = FontWeight.SemiBold)
-                Spacer(modifier= Modifier.height(5.dp))
+                )
+                Text(
+                    text = note.title, style = MaterialTheme.typography.bodyLarge, maxLines = 2,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(text = note.content.take(100), style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier= Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
             }
 
@@ -158,8 +216,6 @@ fun NoteItemGrid(note : Note, onClick: () -> Unit) {
 
     }
 }
-
-
 
 
 @Composable

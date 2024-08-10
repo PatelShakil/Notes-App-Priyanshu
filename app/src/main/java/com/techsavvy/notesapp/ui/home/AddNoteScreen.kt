@@ -63,17 +63,25 @@ import kotlinx.coroutines.yield
 fun AddNoteScreen(
     navController: NavController,
     initialId: Long? = null,
-    initialTitle: String = "",
-    initialContent: String = "",
     reminderTime: Int
 ) {
-    var title by remember { mutableStateOf(initialTitle) }
-    var content by remember { mutableStateOf(initialContent) }
     val context = LocalContext.current
+
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
     val noteId = initialId ?: System.currentTimeMillis()
     val notesPreferences = remember { NotesPreferences(context) }
     var saveStatus by remember { mutableStateOf<Result<Boolean>?>(null) } // Track save status
     var lastNotificationTime by remember { mutableStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(true) {
+        if(initialId != null){
+            val note = notesPreferences.getNote(initialId)
+            title = note?.title ?: ""
+            content = note?.content ?: ""
+        }
+    }
+
+
     LaunchedEffect(Unit) {
         createNotificationChannel(context)
     }
@@ -112,7 +120,8 @@ fun AddNoteScreen(
                     Text(
                         "Add Note", style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
-                            .padding(12.dp)
+                            .padding(12.dp),
+                        fontWeight = FontWeight.Bold
                     )
                 }
                 IconButton(onClick = {
@@ -167,7 +176,7 @@ fun AddNoteScreen(
             ),
             textStyle = TextStyle(
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 22.sp
             )
         )
         HorizontalDivider(
@@ -198,7 +207,8 @@ fun AddNoteScreen(
                 unfocusedIndicatorColor = Color.Transparent
             ),
             textStyle = TextStyle(
-                color = Color.Black
+                color = Color.Black,
+                fontSize = 18.sp
             )
         )
     }

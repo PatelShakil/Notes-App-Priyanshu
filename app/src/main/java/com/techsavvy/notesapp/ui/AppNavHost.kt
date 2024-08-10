@@ -29,22 +29,16 @@ fun NotesApp() {
         composable("home") {
             HomeScreen(navController)
         }
-        composable("add_note_screen?id={id}&title={title}&content={content}",
+        composable("add_note_screen?id={id}",
             arguments = listOf(
                 navArgument("id") { defaultValue = "" },
-                navArgument("title") { defaultValue = "" },
-                navArgument("content") { defaultValue = "" }
             )
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
-            val title = backStackEntry.arguments?.getString("title") ?: ""
-            val content = backStackEntry.arguments?.getString("content") ?: ""
 
                 AddNoteScreen(
                     navController,
                     initialId = id,
-                    initialTitle = title,
-                    initialContent = content,
                     reminderTime = reminderTime
                 )
         }

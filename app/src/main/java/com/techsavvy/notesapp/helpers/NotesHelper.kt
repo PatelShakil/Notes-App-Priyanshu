@@ -22,6 +22,30 @@ class NotesPreferences(context: Context) {
         return Gson().fromJson(json, type)
     }
 
+    fun getNote(noteId : Long): Note? {
+        val notes= getNoteList()
+        return notes.find { it.id == noteId }
+    }
+
+    fun deleteNote(noteId: Long): Result<Boolean> {
+        return try {
+            val notes = getNoteList().toMutableList()
+            val index = notes.indexOfFirst { it.id == noteId }
+            if (index >= 0) {
+                notes.removeAt(index)
+                saveNoteList(notes)
+                Result.success(true) // Return success
+            } else {
+                Result.failure(Exception("Note not found")) // Return failure
+            }
+        }
+        catch (e: Exception) {
+            // Handle any exceptions
+            Result.failure(e) // Return failure
+        }
+    }
+
+
     fun saveNote(note: Note): Result<Boolean> {
         return try {
             val notes = getNoteList().toMutableList()
