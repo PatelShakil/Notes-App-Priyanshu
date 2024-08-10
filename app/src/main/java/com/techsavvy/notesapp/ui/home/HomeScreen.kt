@@ -94,7 +94,9 @@ fun HomeScreen(navController: NavController) {
                         }
                         lastClickTime = currentTime
                     },
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 26.sp
                 )
             }
         )

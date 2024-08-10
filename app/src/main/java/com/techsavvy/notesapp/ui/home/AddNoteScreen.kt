@@ -86,12 +86,16 @@ fun AddNoteScreen(
         createNotificationChannel(context)
     }
 
-    LaunchedEffect(content,title) {
-        if (content.isNotEmpty() && title.isNotEmpty()) {
+    // Notification logic based on time interval
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(reminderTime * 1000L) // Wait for the reminder time interval
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastNotificationTime >= reminderTime * 1000L) {
-                lastNotificationTime = currentTime
-                showHighPriorityNotification(context, title, content)
+                if (title.isNotEmpty() || content.isNotEmpty()) {
+                    lastNotificationTime = currentTime
+                    showHighPriorityNotification(context, title, content)
+                }
             }
         }
     }
@@ -208,7 +212,7 @@ fun AddNoteScreen(
             ),
             textStyle = TextStyle(
                 color = Color.Black,
-                fontSize = 18.sp
+                fontSize = 22.sp
             )
         )
     }
