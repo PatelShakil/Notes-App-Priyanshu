@@ -8,6 +8,61 @@ import com.google.gson.reflect.TypeToken
 class NotesPreferences(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("notes_prefs", Context.MODE_PRIVATE)
+    private val fixedSharedPreferences = context.getSharedPreferences("fixed_notes_prefs", Context.MODE_PRIVATE)
+
+    fun getAllFixedNotes(): List<Note> {
+        val json = fixedSharedPreferences.getString("fixed_notes", null) ?: return emptyList()
+        val type = object : TypeToken<List<Note>>() {}.type
+        return Gson().fromJson(json, type)
+    }
+
+    fun saveFixedNotes(noteList: List<Note>) {
+        val editor = fixedSharedPreferences.edit()
+        val json = Gson().toJson(noteList)
+        editor.putString("fixed_notes", json)
+        editor.apply()
+    }
+    fun saveFixedNote(note: Note) : Result<Boolean>{
+        return try {
+            val fixedNotes = getAllFixedNotes().toMutableList()
+            val index = fixedNotes.indexOfFirst { it.id == note.id }
+            if (index >= 0) {
+                // Note exists, update it
+                fixedNotes[index] = note
+            } else {
+                // Note does not exist, add it
+                fixedNotes.add(note)
+            }
+            saveFixedNotes(fixedNotes)
+            Result.success(true) // Return success
+        } catch (e: Exception) {
+            // Handle any exceptions
+            Result.failure(e) // Return failure
+        }
+    }
+
+    fun addFixedNote(note: Note) {
+        val fixedNotes = getAllFixedNotes().toMutableList()
+        fixedNotes.add(note)
+        saveFixedNotes(fixedNotes)
+        }
+
+    fun removeFixedNote(noteId: Long) {
+        val fixedNotes = getAllFixedNotes().toMutableList()
+        fixedNotes.removeAll { it.id == noteId }
+        saveFixedNotes(fixedNotes)
+    }
+    fun getFixedNote(noteId : Long): Note? {
+        val notes= getAllFixedNotes()
+        return notes.find { it.id == noteId }
+    }
+
+    fun isAnyFixedNoteExists(): Boolean {
+        val fixedNotes = getAllFixedNotes()
+        return fixedNotes.isNotEmpty()
+    }
+
+
 
     fun saveNoteList(noteList: List<Note>) {
         val editor = sharedPreferences.edit()

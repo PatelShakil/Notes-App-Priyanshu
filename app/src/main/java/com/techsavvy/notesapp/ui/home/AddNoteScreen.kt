@@ -63,7 +63,8 @@ import kotlinx.coroutines.yield
 fun AddNoteScreen(
     navController: NavController,
     initialId: Long? = null,
-    reminderTime: Int
+    reminderTime: Int,
+    isFixed : Boolean
 ) {
     val context = LocalContext.current
 
@@ -75,7 +76,7 @@ fun AddNoteScreen(
     var lastNotificationTime by remember { mutableStateOf(System.currentTimeMillis()) }
     LaunchedEffect(true) {
         if(initialId != null){
-            val note = notesPreferences.getNote(initialId)
+            val note = if(isFixed) notesPreferences.getFixedNote(initialId) else notesPreferences.getNote(initialId)
             title = note?.title ?: ""
             content = note?.content ?: ""
         }
@@ -142,7 +143,7 @@ fun AddNoteScreen(
                             content = content,
                             timestamp = System.currentTimeMillis()
                         )
-                        val result = notesPreferences.saveNote(newNote)
+                        val result = if(isFixed) notesPreferences.saveFixedNote(newNote) else notesPreferences.saveNote(newNote)
                         saveStatus = result // Update save status
 
                         if (result.isSuccess) {

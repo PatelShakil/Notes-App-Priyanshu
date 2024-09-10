@@ -29,9 +29,10 @@ fun NotesApp() {
         composable("home") {
             HomeScreen(navController)
         }
-        composable("add_note_screen?id={id}",
+        composable("add_note_screen?id={id}/isFixed={isFixed}",
             arguments = listOf(
                 navArgument("id") { defaultValue = "" },
+                navArgument("isFixed") { defaultValue = false }
             )
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
@@ -39,7 +40,8 @@ fun NotesApp() {
                 AddNoteScreen(
                     navController,
                     initialId = id,
-                    reminderTime = reminderTime
+                    reminderTime = reminderTime,
+                    isFixed = backStackEntry.arguments?.getBoolean("isFixed") ?: false
                 )
         }
 
