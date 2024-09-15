@@ -122,12 +122,7 @@ fun AddNoteScreen(
                             contentDescription = null
                         )
                     }
-                    Text(
-                        "Add Note", style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(12.dp),
-                        fontWeight = FontWeight.Bold
-                    )
+
                 }
                 IconButton(onClick = {
                     if (title.isEmpty() || content.isEmpty()) {

@@ -3,12 +3,18 @@ package com.techsavvy.notesapp.ui.home
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,6 +53,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,21 +62,26 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.techsavvy.notesapp.helpers.Note
 import com.techsavvy.notesapp.helpers.NotesPreferences
+import com.techsavvy.notesapp.helpers.vibrateStrong
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
 
     val notesPreferences = NotesPreferences(context)
     var notes by remember { mutableStateOf(listOf<Note>()) }
+    var fixedNotesList by remember { mutableStateOf(listOf<Note>()) }
     var lastClickTime by remember { mutableStateOf(0L) }
+    var selectedId by remember{ mutableStateOf(notesPreferences.getSelectedId()) }
+
 
     LaunchedEffect(true) {
         notes = notesPreferences.getNoteList()
+        fixedNotesList = NotesPreferences(context).getAllFixedNotes()
     }
 
     LaunchedEffect(true) {
@@ -96,7 +108,7 @@ fun HomeScreen(navController: NavController) {
                     },
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge,
-                    fontSize = 26.sp
+                    fontSize = 28.sp
                 )
             }
         )
@@ -117,20 +129,106 @@ fun HomeScreen(navController: NavController) {
 
         var isDelete by remember { mutableStateOf(false) }
         var noteId by remember { mutableStateOf(0L) }
+        fun updateSelectedNoteId(id : Long){
+            if(notesPreferences.getNote(1L) != null){
+                notesPreferences.deleteNote(1L)
+                notes = notesPreferences.getNoteList()
+            }
+            notesPreferences.saveSelectedId(id)
+            selectedId = notesPreferences.getSelectedId()
+        }
+        Box() {
 
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.padding(it)
-        ) {
-            itemsIndexed(notes) { index, note ->
-                NoteItemGrid(note, {
-                    navController.navigate("add_note_screen?id=${note.id}")
-                }) {
-                    isDelete = true
-                    noteId = note.id
+            if(fixedNotesList.isNotEmpty()){
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(it)
+                ){
+                    val view = LocalView.current
+                    repeat(4){x->
+                        Row(
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        ){
+                            repeat(3){y->
+                                Box(modifier = Modifier.weight(1f).fillMaxSize()
+                                    .combinedClickable(indication = null, interactionSource = remember{ MutableInteractionSource() }, onLongClick = {
+                                        view.vibrateStrong()
+                                        when{
+                                            x==0 && y==2 -> {
+                                                updateSelectedNoteId(1L)
+                                            }
+                                            x==1 && y==0 -> {
+                                                updateSelectedNoteId(2L)
+                                            }
+                                            x==1 && y==1->{
+                                                updateSelectedNoteId(3L)
+                                            }
+                                            x==1 && y==2 -> {
+                                                updateSelectedNoteId(4L)
+                                            }
+                                            x==2 && y==0 -> {
+//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
+                                                updateSelectedNoteId(5L)
+                                            }
+                                            x==2 && y==1 -> {
+                                                updateSelectedNoteId(6L)
+                                            }
+                                            x==2 && y==2 -> {
+                                                updateSelectedNoteId(7L)
+                                            }
+                                            x==3 && y==0 -> {
+                                                updateSelectedNoteId(8L)
+//                                                navController.navigate("add_note_screen?id=${8}/isFixed=true")
+                                            }
+                                            x==3 && y==1 -> {
+                                                updateSelectedNoteId(9L)
+//                                                navController.navigate("add_note_screen?id=${9}/isFixed=true")
+                                            }
+                                            x==3 && y==2 -> {
+                                                updateSelectedNoteId(10L)
+//                                                navController.navigate("add_note_screen?id=${10}/isFixed=true")
+                                            }
+                                        }
+                                    }){
+
+                                    })
+                            }
+                        }
+                    }
                 }
             }
+
+
+
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.padding(it)
+            ) {
+
+                if(selectedId != 0L){
+                    val note = notesPreferences.getFixedNote(notesPreferences.getSelectedId())
+                    if(note != null) {
+                        item {
+                            NoteItemGrid(note.copy(content = ""), {
+                                navController.navigate("add_note_screen?id=${note.id}/isFixed=true")
+                            }) {
+
+                            }
+                        }
+                    }
+                }
+
+                itemsIndexed(notes) { index, note ->
+                    NoteItemGrid(note, {
+                        navController.navigate("add_note_screen?id=${note.id}/isFixed=false")
+                    }) {
+                        isDelete = true
+                        noteId = note.id
+                    }
+                }
+            }
+
         }
+
 
         if(isDelete){
             AlertDialog(onDismissRequest = {

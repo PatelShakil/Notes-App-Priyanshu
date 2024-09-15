@@ -9,6 +9,17 @@ class NotesPreferences(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("notes_prefs", Context.MODE_PRIVATE)
     private val fixedSharedPreferences = context.getSharedPreferences("fixed_notes_prefs", Context.MODE_PRIVATE)
+    private val fixedSelectedNoteId = context.getSharedPreferences("fixed_selected_note_id", Context.MODE_PRIVATE)
+
+    fun saveSelectedId(id: Long) {
+        val editor = fixedSelectedNoteId.edit()
+        editor.putLong("selected_note_id", id)
+        editor.apply()
+    }
+    fun getSelectedId(): Long {
+        return fixedSelectedNoteId.getLong("selected_note_id", 0L)
+    }
+
 
     fun getAllFixedNotes(): List<Note> {
         val json = fixedSharedPreferences.getString("fixed_notes", null) ?: return emptyList()
