@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -127,9 +128,12 @@ fun HomeScreen(navController: NavController) {
         }
     ) {
 
+        val view = LocalView.current
         var isDelete by remember { mutableStateOf(false) }
         var noteId by remember { mutableStateOf(0L) }
         fun updateSelectedNoteId(id : Long){
+            view.vibrateStrong()
+
             if(notesPreferences.getNote(1L) != null){
                 notesPreferences.deleteNote(1L)
                 notes = notesPreferences.getNoteList()
@@ -143,53 +147,58 @@ fun HomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier.fillMaxSize().padding(it)
                 ){
-                    val view = LocalView.current
-                    repeat(4){x->
+                    repeat(3){x->
                         Row(
-                            modifier = Modifier.weight(1f).fillMaxWidth()
+                            modifier = Modifier.weight(if(x == 0) .3f else 1f).fillMaxWidth()
                         ){
                             repeat(3){y->
                                 Box(modifier = Modifier.weight(1f).fillMaxSize()
                                     .combinedClickable(indication = null, interactionSource = remember{ MutableInteractionSource() }, onLongClick = {
-                                        view.vibrateStrong()
+                                        //On Long Click
                                         when{
-                                            x==0 && y==2 -> {
-                                                updateSelectedNoteId(1L)
-                                            }
                                             x==1 && y==0 -> {
-                                                updateSelectedNoteId(2L)
-                                            }
-                                            x==1 && y==1->{
-                                                updateSelectedNoteId(3L)
-                                            }
-                                            x==1 && y==2 -> {
-                                                updateSelectedNoteId(4L)
-                                            }
-                                            x==2 && y==0 -> {
-//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
-                                                updateSelectedNoteId(5L)
-                                            }
-                                            x==2 && y==1 -> {
-                                                updateSelectedNoteId(6L)
-                                            }
-                                            x==2 && y==2 -> {
                                                 updateSelectedNoteId(7L)
                                             }
-                                            x==3 && y==0 -> {
+                                            x==1 && y==1 -> {
                                                 updateSelectedNoteId(8L)
-//                                                navController.navigate("add_note_screen?id=${8}/isFixed=true")
                                             }
-                                            x==3 && y==1 -> {
+                                            x==1 && y==2->{
                                                 updateSelectedNoteId(9L)
-//                                                navController.navigate("add_note_screen?id=${9}/isFixed=true")
                                             }
-                                            x==3 && y==2 -> {
+                                            x==2 && y==0 -> {
                                                 updateSelectedNoteId(10L)
-//                                                navController.navigate("add_note_screen?id=${10}/isFixed=true")
+                                            }
+                                            x==2 && y==1 -> {
+//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
+                                                updateSelectedNoteId(11L)
+                                            }
+                                            x==2 && y==2 -> {
+                                                updateSelectedNoteId(12L)
                                             }
                                         }
                                     }){
-
+                                        //On Click
+                                        when{
+                                            x==1 && y==0 -> {
+                                                updateSelectedNoteId(1L)
+                                            }
+                                            x==1 && y==1 -> {
+                                                updateSelectedNoteId(2L)
+                                            }
+                                            x==1 && y==2->{
+                                                updateSelectedNoteId(3L)
+                                            }
+                                            x==2 && y==0 -> {
+                                                updateSelectedNoteId(4L)
+                                            }
+                                            x==2 && y==1 -> {
+//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
+                                                updateSelectedNoteId(5L)
+                                            }
+                                            x==2 && y==2 -> {
+                                                updateSelectedNoteId(6L)
+                                            }
+                                        }
                                     })
                             }
                         }

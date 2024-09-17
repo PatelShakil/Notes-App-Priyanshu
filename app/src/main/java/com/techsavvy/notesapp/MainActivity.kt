@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         if(!notesPreferences.isAnyFixedNoteExists()){
             notesPreferences.saveNote(Note(1,"Shopping List","1",System.currentTimeMillis()))
             val notesList = mutableListOf<Note>()
-            for (i in 1..10) {
+            for (i in 1..12) {
                 notesList.add(Note(i.toLong(), "Dummy Notes No. $i", "Description of Dummy Note $i",System.currentTimeMillis()))
             }
             notesPreferences.saveFixedNotes(notesList)
