@@ -11,6 +11,7 @@ import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -101,12 +102,13 @@ fun AddNoteScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(Color.White)
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -176,7 +178,8 @@ fun AddNoteScreen(
             ),
             textStyle = TextStyle(
                 fontWeight = FontWeight.Bold,
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         )
         HorizontalDivider(
@@ -207,8 +210,8 @@ fun AddNoteScreen(
                 unfocusedIndicatorColor = Color.Transparent
             ),
             textStyle = TextStyle(
-                color = Color.Black,
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         )
     }

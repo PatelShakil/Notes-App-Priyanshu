@@ -10,7 +10,16 @@ class NotesPreferences(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("notes_prefs", Context.MODE_PRIVATE)
     private val fixedSharedPreferences = context.getSharedPreferences("fixed_notes_prefs", Context.MODE_PRIVATE)
     private val fixedSelectedNoteId = context.getSharedPreferences("fixed_selected_note_id", Context.MODE_PRIVATE)
+    private val isDarkMode = context.getSharedPreferences("is_dark_mode", Context.MODE_PRIVATE)
 
+    fun saveIsDarkMode(isDarkMode: Boolean) {
+        val editor = this.isDarkMode.edit()
+        editor.putBoolean("is_dark_mode", isDarkMode)
+        editor.apply()
+    }
+    fun getIsDarkMode(): Boolean {
+        return isDarkMode.getBoolean("is_dark_mode", false)
+    }
     fun saveSelectedId(id: Long) {
         val editor = fixedSelectedNoteId.edit()
         editor.putLong("selected_note_id", id)
