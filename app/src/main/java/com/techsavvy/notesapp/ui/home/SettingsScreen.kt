@@ -56,30 +56,30 @@ fun SettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    val sharedPreferences = NotesPreferences(context)
-                    var isDarkMode by remember{ mutableStateOf(sharedPreferences.getIsDarkMode()) }
+//                    val sharedPreferences = NotesPreferences(context)
+//                    var isDarkMode by remember{ mutableStateOf(sharedPreferences.getIsDarkMode()) }
 
                     Row(modifier= Modifier.fillMaxWidth()
                         .padding(end = 15.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
                         Text("Settings", fontWeight = FontWeight.Bold)
-                        Row(verticalAlignment = Alignment.CenterVertically,) {
-                            Text("Light",style = MaterialTheme.typography.titleSmall)
-                            Switch(isDarkMode, {
-                                sharedPreferences.saveIsDarkMode(!isDarkMode)
-                                isDarkMode = sharedPreferences.getIsDarkMode()
-                                (context as Activity).recreate()
-//                                val packageManager: PackageManager = context.packageManager
-//                                val intent: Intent = packageManager.getLaunchIntentForPackage(context.packageName)!!
-//                                val componentName: ComponentName = intent.component!!
-//                                val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-//                                context.startActivity(restartIntent)
-//                                Runtime.getRuntime().exit(0)
-                            },
-                                modifier= Modifier.padding(horizontal = 10.dp))
-                            Text("Dark",style = MaterialTheme.typography.titleSmall)
-                        }
+//                        Row(verticalAlignment = Alignment.CenterVertically,) {
+//                            Text("Light",style = MaterialTheme.typography.titleSmall)
+//                            Switch(isDarkMode, {
+//                                sharedPreferences.saveIsDarkMode(!isDarkMode)
+//                                isDarkMode = sharedPreferences.getIsDarkMode()
+//                                (context as Activity).recreate()
+////                                val packageManager: PackageManager = context.packageManager
+////                                val intent: Intent = packageManager.getLaunchIntentForPackage(context.packageName)!!
+////                                val componentName: ComponentName = intent.component!!
+////                                val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
+////                                context.startActivity(restartIntent)
+////                                Runtime.getRuntime().exit(0)
+//                            },
+//                                modifier= Modifier.padding(horizontal = 10.dp))
+//                            Text("Dark",style = MaterialTheme.typography.titleSmall)
+//                        }
                     }
                 }
             )

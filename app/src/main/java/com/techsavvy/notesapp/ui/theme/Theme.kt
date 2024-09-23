@@ -23,13 +23,6 @@ private val DarkColorPalette = darkColorScheme(
     background = ThemeColors.Night.bacground
 )
 
-private val LightColorPalette = lightColorScheme(
-    primary = ThemeColors.Day.primary,
-    onPrimary = ThemeColors.Day.text,
-    surface = ThemeColors.Day.surafce,
-    background = ThemeColors.Day.bacground
-)
-
 @Composable
 fun NotesAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -40,25 +33,14 @@ fun NotesAppTheme(
 
     val context = LocalContext.current
 
-    val sharedPreferences = NotesPreferences(context)
 
-    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-
-
-
-        sharedPreferences.getIsDarkMode() -> DarkColorPalette
-        else -> LightColorPalette
-    }
+    val colorScheme = DarkColorPalette
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.surface.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !sharedPreferences.getIsDarkMode()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
 

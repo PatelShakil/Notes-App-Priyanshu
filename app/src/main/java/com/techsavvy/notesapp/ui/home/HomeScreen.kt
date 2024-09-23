@@ -106,7 +106,7 @@ fun HomeScreen(navController: NavController) {
     dList = when (search) {
         "" -> notes.toMutableList()
         else -> notes.filter {
-            it.title.contains(search) || it.content.contains(search)
+            it.title.contains(search,true) || it.content.contains(search,true)
         }.toMutableList()
     }
 
@@ -120,7 +120,7 @@ fun HomeScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    AnimatedVisibility(!isSearchOpen) {
+                    if(!isSearchOpen) {
                         Text(
                             text = "Notes",
                             modifier = Modifier.clickable {
@@ -135,7 +135,7 @@ fun HomeScreen(navController: NavController) {
                             fontSize = 28.sp
                         )
                     }
-                    AnimatedVisibility(isSearchOpen) {
+                    if(isSearchOpen) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -179,14 +179,14 @@ fun HomeScreen(navController: NavController) {
                             )
                         }
                     }
-                    AnimatedVisibility(!isSearchOpen) {
+                    if(!isSearchOpen) {
                         IconButton(
                             onClick = {
                                 isSearchOpen = !isSearchOpen
                                 dList = when (search) {
                                     "" -> notes.toMutableList()
                                     else -> notes.filter {
-                                        it.title.contains(search) || it.content.contains(search)
+                                        it.title.contains(search,true) || it.content.contains(search,true)
                                     }.toMutableList()
                                 }
                                 scope.launch {
@@ -203,7 +203,6 @@ fun HomeScreen(navController: NavController) {
                             )
                         }
                     }
-
                 }
             }
         )
@@ -435,23 +434,7 @@ fun NoteItemGrid(note: Note, onClick: () -> Unit, onLongClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = note.content.take(100), style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(5.dp))
-
             }
-
         }
-
-    }
-}
-
-
-@Composable
-fun NoteItem(note: Note, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable(onClick = onClick)
-    ) {
-
     }
 }
