@@ -132,7 +132,8 @@ fun HomeScreen(navController: NavController) {
                             },
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleLarge,
-                            fontSize = 28.sp
+                            fontSize = 28.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                     if(isSearchOpen) {
@@ -155,7 +156,8 @@ fun HomeScreen(navController: NavController) {
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Search,
-                                        ""
+                                        "",
+                                        tint = MaterialTheme.colorScheme.onPrimary
                                     )
                                 },
                                 trailingIcon = {
@@ -165,7 +167,8 @@ fun HomeScreen(navController: NavController) {
                                     }) {
                                         Icon(
                                             Icons.Default.Clear,
-                                            ""
+                                            "",
+                                            tint = MaterialTheme.colorScheme.onPrimary
                                         )
                                     }
                                 },
@@ -173,7 +176,7 @@ fun HomeScreen(navController: NavController) {
                                     focusedContainerColor = Color.Transparent,
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedContainerColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
                                 ),
                                 singleLine = true
                             )
@@ -190,7 +193,7 @@ fun HomeScreen(navController: NavController) {
                                     }.toMutableList()
                                 }
                                 scope.launch {
-                                    delay(500)
+                                    delay(1000)
                                     yield()
                                     focusRequester.requestFocus()
 
@@ -199,7 +202,8 @@ fun HomeScreen(navController: NavController) {
                         ) {
                             Icon(
                                 Icons.Default.Search,
-                                ""
+                                "",
+                                tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
@@ -429,10 +433,13 @@ fun NoteItemGrid(note: Note, onClick: () -> Unit, onLongClick: () -> Unit) {
                 )
                 Text(
                     text = note.title, style = MaterialTheme.typography.bodyLarge, maxLines = 2,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(text = note.content.take(100), style = MaterialTheme.typography.bodyMedium)
+                Text(text = note.content.take(100),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary)
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }

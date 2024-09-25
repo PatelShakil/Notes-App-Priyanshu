@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -23,6 +24,13 @@ private val DarkColorPalette = darkColorScheme(
     background = ThemeColors.Night.bacground
 )
 
+private val LightColorPalette = darkColorScheme(
+    primary = ThemeColors.Day.primary,
+    onPrimary = ThemeColors.Day.text,
+    surface = ThemeColors.Day.surafce,
+    background = ThemeColors.Day.bacground
+)
+
 @Composable
 fun NotesAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -32,15 +40,19 @@ fun NotesAppTheme(
 ) {
 
     val context = LocalContext.current
+    val sharedPreferences = NotesPreferences(context)
 
 
-    val colorScheme = DarkColorPalette
+    val colorScheme = when(sharedPreferences.getIsDarkMode()){
+        true -> DarkColorPalette
+        false -> LightColorPalette
+    }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.surface.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !sharedPreferences.getIsDarkMode()
         }
     }
 

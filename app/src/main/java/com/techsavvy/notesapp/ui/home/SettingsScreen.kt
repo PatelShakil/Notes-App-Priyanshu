@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -56,30 +57,28 @@ fun SettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-//                    val sharedPreferences = NotesPreferences(context)
-//                    var isDarkMode by remember{ mutableStateOf(sharedPreferences.getIsDarkMode()) }
+                    val sharedPreferences = NotesPreferences(context)
+                    var isDarkMode by remember{ mutableStateOf(sharedPreferences.getIsDarkMode()) }
 
-                    Row(modifier= Modifier.fillMaxWidth()
+                    Row(modifier= Modifier
+                        .fillMaxWidth()
                         .padding(end = 15.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
-                        Text("Settings", fontWeight = FontWeight.Bold)
-//                        Row(verticalAlignment = Alignment.CenterVertically,) {
-//                            Text("Light",style = MaterialTheme.typography.titleSmall)
-//                            Switch(isDarkMode, {
-//                                sharedPreferences.saveIsDarkMode(!isDarkMode)
-//                                isDarkMode = sharedPreferences.getIsDarkMode()
-//                                (context as Activity).recreate()
-////                                val packageManager: PackageManager = context.packageManager
-////                                val intent: Intent = packageManager.getLaunchIntentForPackage(context.packageName)!!
-////                                val componentName: ComponentName = intent.component!!
-////                                val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-////                                context.startActivity(restartIntent)
-////                                Runtime.getRuntime().exit(0)
-//                            },
-//                                modifier= Modifier.padding(horizontal = 10.dp))
-//                            Text("Dark",style = MaterialTheme.typography.titleSmall)
-//                        }
+                        Text("Settings", fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary)
+                        Row(verticalAlignment = Alignment.CenterVertically,) {
+                            Text("Light",style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onPrimary)
+                            Switch(isDarkMode, {
+                                sharedPreferences.saveIsDarkMode(!isDarkMode)
+                                isDarkMode = sharedPreferences.getIsDarkMode()
+                                (context as Activity).recreate()
+                            },
+                                modifier= Modifier.padding(horizontal = 10.dp))
+                            Text("Dark",style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onPrimary)
+                        }
                     }
                 }
             )
@@ -92,7 +91,8 @@ fun SettingsScreen(
         ) {
             Text(
                 text = "Notification Interval ${currentReminderTime}s",
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onPrimary
             )
 
             OutlinedTextField(
@@ -110,11 +110,15 @@ fun SettingsScreen(
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 },
-                singleLine = true
+                singleLine = true,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             )
             var notesList by remember {
                 mutableStateOf(mutableListOf<Note>())

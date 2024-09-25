@@ -108,7 +108,7 @@ fun AddNoteScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -121,7 +121,8 @@ fun AddNoteScreen(
                     }) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
 
@@ -151,7 +152,8 @@ fun AddNoteScreen(
                         }
                     }
                 }) {
-                    Icon(painterResource(id = R.drawable.ic_save), contentDescription = null)
+                    Icon(painterResource(id = R.drawable.ic_save), contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }

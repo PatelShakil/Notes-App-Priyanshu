@@ -15,8 +15,8 @@ val clear_dark = Color(0xFFA05162)
 val dark_btn = Color(0xFF0D0E0E)
 
 // define your colors for dark theme
-val light_btn = Color(android.graphics.Color.parseColor("#E9F0F4"))
-val light_bg = Color(android.graphics.Color.parseColor("#F6F8F9"))
+val light_btn = Color(0xFFF5F5F5)
+val light_bg = Color.White
 val clear_light = Color(0xFFF1C8D1)
 
 sealed class ThemeColors(
