@@ -20,14 +20,14 @@ import com.techsavvy.notesapp.helpers.NotesPreferences
 private val DarkColorPalette = darkColorScheme(
     primary = ThemeColors.Night.primary,
     onPrimary = ThemeColors.Night.text,
-    surface = ThemeColors.Night.surafce,
+    surface = ThemeColors.Night.bacground,
     background = ThemeColors.Night.bacground
 )
 
 private val LightColorPalette = darkColorScheme(
     primary = ThemeColors.Day.primary,
     onPrimary = ThemeColors.Day.text,
-    surface = ThemeColors.Day.surafce,
+    surface = ThemeColors.Day.bacground,
     background = ThemeColors.Day.bacground
 )
 

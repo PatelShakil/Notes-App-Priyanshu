@@ -108,7 +108,7 @@ fun AddNoteScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
