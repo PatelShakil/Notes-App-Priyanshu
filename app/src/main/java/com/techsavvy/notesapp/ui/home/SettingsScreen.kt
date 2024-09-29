@@ -4,17 +4,25 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +51,7 @@ import com.techsavvy.notesapp.R
 import com.techsavvy.notesapp.helpers.Note
 import com.techsavvy.notesapp.helpers.NotesPreferences
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
@@ -52,32 +60,42 @@ fun SettingsScreen(
 ) {
     var reminderTime by remember { mutableStateOf(currentReminderTime.toString()) }
     val context = LocalContext.current
+    val sharedPreferences = NotesPreferences(context)
+    var isDarkMode by remember { mutableStateOf(sharedPreferences.getIsDarkMode()) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    val sharedPreferences = NotesPreferences(context)
-                    var isDarkMode by remember{ mutableStateOf(sharedPreferences.getIsDarkMode()) }
-
-                    Row(modifier= Modifier
-                        .fillMaxWidth()
-                        .padding(end = 15.dp),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 15.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically) {
-                        Text("Settings", fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary)
-                        Row(verticalAlignment = Alignment.CenterVertically,) {
-                            Text("Light",style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onPrimary)
-                            Switch(isDarkMode, {
-                                sharedPreferences.saveIsDarkMode(!isDarkMode)
-                                isDarkMode = sharedPreferences.getIsDarkMode()
-                                (context as Activity).recreate()
-                            },
-                                modifier= Modifier.padding(horizontal = 10.dp))
-                            Text("Dark",style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onPrimary)
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Settings", fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                "Light",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Switch(
+                                isDarkMode, {
+                                    sharedPreferences.saveIsDarkMode(!isDarkMode)
+                                    isDarkMode = sharedPreferences.getIsDarkMode()
+                                    (context as Activity).recreate()
+                                },
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                            Text(
+                                "Dark", style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     }
                 }
@@ -120,27 +138,47 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             )
-            var notesList by remember {
-                mutableStateOf(mutableListOf<Note>())
-            }
-            LaunchedEffect(key1 = true) {
-                val notesPreferences = NotesPreferences(context)
-                notesList = notesPreferences.getAllFixedNotes().toMutableList()
-            }
-            if (notesList.isNotEmpty()) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                ) {
-                    itemsIndexed(notesList) { index, note ->
-                        NoteItemGrid(note, {
-                            navController.navigate("add_note_screen?id=${note.id}/isFixed=true")
-                        }) {
+
+            val pagerState = rememberPagerState(pageCount = { 10 }) // Fixed pagerState
+            var defaultPage by remember { mutableStateOf(sharedPreferences.getDefaultFixed()) }
+
+            HorizontalPager(state = pagerState) { p ->
+                val page = p + 1
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable {
+                                sharedPreferences.saveDefaultFixed(page)
+                                defaultPage = sharedPreferences.getDefaultFixed()
+                            }
+                        ) {
+                            Checkbox(
+                                checked = page == defaultPage,
+                                onCheckedChange = null // Simplified logic
+                            )
+                            Spacer(Modifier.width(5.dp))
+                            Text("Default")
+                        }
+                        Text("Page : $page")
+                    }
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                    ) {
+                        itemsIndexed(sharedPreferences.getFixedNotesByPage(page)) { _, note ->
+                            NoteItemGrid(note, {
+                                navController.navigate("add_note_screen?id=${note.id}/isFixed=true")
+                            }) {}
                         }
                     }
                 }
             }
-
-
         }
     }
 }

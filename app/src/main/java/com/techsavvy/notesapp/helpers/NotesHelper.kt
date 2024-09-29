@@ -1,6 +1,7 @@
 package com.techsavvy.notesapp.helpers
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -11,6 +12,27 @@ class NotesPreferences(context: Context) {
     private val fixedSharedPreferences = context.getSharedPreferences("fixed_notes_prefs", Context.MODE_PRIVATE)
     private val fixedSelectedNoteId = context.getSharedPreferences("fixed_selected_note_id", Context.MODE_PRIVATE)
     private val isDarkMode = context.getSharedPreferences("is_dark_mode", Context.MODE_PRIVATE)
+    private val defaultFixed = context.getSharedPreferences("default_fixed", Context.MODE_PRIVATE)
+
+    fun saveDefaultFixed(defaultFixed: Int) {
+        val editor = this.defaultFixed.edit()
+        editor.putInt("default_fixed", defaultFixed)
+        editor.apply()
+    }
+
+    fun getDefaultFixed(): Int {
+        return defaultFixed.getInt("default_fixed",1)
+    }
+
+    fun getFixedNotesByPage(page : Int,pageSize : Int = 12): List<Note> {
+        val fixedNotes = getAllFixedNotes()
+        val startIndex = (page - 1) * pageSize
+        val endIndex = minOf(startIndex + pageSize, fixedNotes.size)
+        Log.d("NotesPreferences", "getFixedNotesByPage: $startIndex")
+        Log.d("NotesPreferences", "getFixedNotesByPage: $endIndex")
+        return fixedNotes.subList(startIndex, endIndex)
+    }
+
 
     fun saveIsDarkMode(isDarkMode: Boolean) {
         val editor = this.isDarkMode.edit()

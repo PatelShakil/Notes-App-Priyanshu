@@ -3,7 +3,7 @@ package com.techsavvy.notesapp.ui.home
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.compose.animation.AnimatedVisibility
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -81,11 +81,14 @@ fun HomeScreen(navController: NavController) {
     var fixedNotesList by remember { mutableStateOf(listOf<Note>()) }
     var lastClickTime by remember { mutableStateOf(0L) }
     var selectedId by remember { mutableStateOf(notesPreferences.getSelectedId()) }
-
-
+    var defaultPage by remember{ mutableStateOf(notesPreferences.getDefaultFixed())}
+    var baseStart by remember{ mutableStateOf((defaultPage-1) * 12) }
     LaunchedEffect(true) {
+        defaultPage = notesPreferences.getDefaultFixed()
+        baseStart = (defaultPage-1) * 12
+        Log.d("defPage",defaultPage.toString())
         notes = notesPreferences.getNoteList()
-        fixedNotesList = NotesPreferences(context).getAllFixedNotes()
+        fixedNotesList = notesPreferences.getFixedNotesByPage(defaultPage)
     }
 
     LaunchedEffect(true) {
@@ -235,7 +238,7 @@ fun HomeScreen(navController: NavController) {
                 notesPreferences.deleteNote(1L)
                 notes = notesPreferences.getNoteList()
             }
-            notesPreferences.saveSelectedId(id)
+            notesPreferences.saveSelectedId(baseStart + id)
             selectedId = notesPreferences.getSelectedId()
         }
         Box() {
