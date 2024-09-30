@@ -139,8 +139,8 @@ fun SettingsScreen(
                 )
             )
 
-            val pagerState = rememberPagerState(pageCount = { 10 }) // Fixed pagerState
             var defaultPage by remember { mutableStateOf(sharedPreferences.getDefaultFixed()) }
+            val pagerState = rememberPagerState(initialPage = sharedPreferences.getDefaultFixed()-1, pageCount = { 10 }) // Fixed pagerState
 
             HorizontalPager(state = pagerState) { p ->
                 val page = p + 1
@@ -164,9 +164,14 @@ fun SettingsScreen(
                                 onCheckedChange = null // Simplified logic
                             )
                             Spacer(Modifier.width(5.dp))
-                            Text("Default")
+                            Text("Default",
+                            color = MaterialTheme.colorScheme.onPrimary
+                                )
+
                         }
-                        Text("Page : $page")
+                        Text("Page : $page",
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),

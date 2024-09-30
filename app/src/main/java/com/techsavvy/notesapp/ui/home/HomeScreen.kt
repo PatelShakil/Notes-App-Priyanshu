@@ -56,6 +56,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -144,7 +145,10 @@ fun HomeScreen(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 2.dp),
-                            shape = CircleShape
+                            shape = CircleShape,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.background
+                            )
                         ) {
                             TextField(
                                 search, onValueChange = {
@@ -179,9 +183,14 @@ fun HomeScreen(navController: NavController) {
                                     focusedContainerColor = Color.Transparent,
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedContainerColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    cursorColor = MaterialTheme.colorScheme.onPrimary
                                 ),
-                                singleLine = true
+                                singleLine = true,
+                                textStyle = TextStyle(
+                                    MaterialTheme.colorScheme.onPrimary,
+                                    fontSize = 20.sp
+                                )
                             )
                         }
                     }
@@ -373,7 +382,9 @@ fun HomeScreen(navController: NavController) {
                         noteId = 0L
                     }
                 ) {
-                    Text("Delete")
+                    Text("Delete",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
 
                 }
 
@@ -385,13 +396,19 @@ fun HomeScreen(navController: NavController) {
                         noteId = 0L
                     }
                 ) {
-                    Text("Cancel")
+                    Text("Cancel",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
 
                 }
             }, title = {
-                Text(text = "Delete Note")
+                Text(text = "Delete Note",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }, text = {
-                Text(text = "Are you sure you want to delete this note?")
+                Text(text = "Are you sure you want to delete this note?",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             })
         }
 

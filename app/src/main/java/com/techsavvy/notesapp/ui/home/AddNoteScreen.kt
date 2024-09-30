@@ -176,7 +176,8 @@ fun AddNoteScreen(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = MaterialTheme.colorScheme.onPrimary
             ),
             textStyle = TextStyle(
                 fontWeight = FontWeight.Bold,
@@ -209,7 +210,8 @@ fun AddNoteScreen(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = MaterialTheme.colorScheme.onPrimary
             ),
             textStyle = TextStyle(
                 fontSize = 22.sp,
