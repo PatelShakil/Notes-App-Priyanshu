@@ -62,6 +62,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val sharedPreferences = NotesPreferences(context)
     var isDarkMode by remember { mutableStateOf(sharedPreferences.getIsDarkMode()) }
+    var isFixedModeOn by remember { mutableStateOf(sharedPreferences.getIsFixedOn()) }
 
     Scaffold(
         topBar = {
@@ -107,11 +108,35 @@ fun SettingsScreen(
                 .padding(it)
                 .fillMaxSize()
         ) {
-            Text(
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal=16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){Text(
                 text = "Notification Interval ${currentReminderTime}s",
-                modifier = Modifier.padding(horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.onPrimary
             )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painterResource(
+                            R.drawable.key_ic
+                        ),
+                        "",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Switch(
+                        isFixedModeOn, {
+                            sharedPreferences.saveIsFixedOn(!isFixedModeOn)
+                            isFixedModeOn = sharedPreferences.getIsFixedOn()
+                        },
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                            .padding(end = 30.dp)
+                    )
+                }
+
+            }
+
 
             OutlinedTextField(
                 value = reminderTime,

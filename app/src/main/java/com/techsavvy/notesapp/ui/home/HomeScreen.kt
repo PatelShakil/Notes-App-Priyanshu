@@ -84,12 +84,15 @@ fun HomeScreen(navController: NavController) {
     var selectedId by remember { mutableStateOf(notesPreferences.getSelectedId()) }
     var defaultPage by remember{ mutableStateOf(notesPreferences.getDefaultFixed())}
     var baseStart by remember{ mutableStateOf((defaultPage-1) * 12) }
+    var isFixedOn by remember{ mutableStateOf(notesPreferences.getIsFixedOn())}
     LaunchedEffect(true) {
         defaultPage = notesPreferences.getDefaultFixed()
         baseStart = (defaultPage-1) * 12
         Log.d("defPage",defaultPage.toString())
         notes = notesPreferences.getNoteList()
         fixedNotesList = notesPreferences.getFixedNotesByPage(defaultPage)
+//        selectedId = notesPreferences.getSelectedId()
+        isFixedOn = notesPreferences.getIsFixedOn()
     }
 
     LaunchedEffect(true) {
@@ -205,10 +208,13 @@ fun HomeScreen(navController: NavController) {
                                     }.toMutableList()
                                 }
                                 scope.launch {
+                                    try{
                                     delay(1000)
                                     yield()
                                     focusRequester.requestFocus()
-
+                                    }catch(e:Exception){
+                                        Log.d("Exception",e.toString())
+                                    }
                                 }
                             }
                         ) {
@@ -252,88 +258,90 @@ fun HomeScreen(navController: NavController) {
         }
         Box() {
 
-            if (fixedNotesList.isNotEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                ) {
-                    repeat(3) { x ->
-                        Row(
-                            modifier = Modifier
-                                .weight(if (x == 0) .3f else 1f)
-                                .fillMaxWidth()
-                        ) {
-                            repeat(3) { y ->
-                                Box(modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxSize()
-                                    .combinedClickable(
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        onLongClick = {
-                                            //On Long Click
+
+            if(isFixedOn) {
+                if (fixedNotesList.isNotEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
+                        repeat(3) { x ->
+                            Row(
+                                modifier = Modifier
+                                    .weight(if (x == 0) .3f else 1f)
+                                    .fillMaxWidth()
+                            ) {
+                                repeat(3) { y ->
+                                    Box(modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxSize()
+                                        .combinedClickable(
+                                            indication = null,
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            onLongClick = {
+                                                //On Long Click
+                                                when {
+                                                    x == 1 && y == 0 -> {
+                                                        updateSelectedNoteId(7L)
+                                                    }
+
+                                                    x == 1 && y == 1 -> {
+                                                        updateSelectedNoteId(8L)
+                                                    }
+
+                                                    x == 1 && y == 2 -> {
+                                                        updateSelectedNoteId(9L)
+                                                    }
+
+                                                    x == 2 && y == 0 -> {
+                                                        updateSelectedNoteId(10L)
+                                                    }
+
+                                                    x == 2 && y == 1 -> {
+//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
+                                                        updateSelectedNoteId(11L)
+                                                    }
+
+                                                    x == 2 && y == 2 -> {
+                                                        updateSelectedNoteId(12L)
+                                                    }
+                                                }
+                                            }) {
+                                            //On Click
                                             when {
                                                 x == 1 && y == 0 -> {
-                                                    updateSelectedNoteId(7L)
+                                                    updateSelectedNoteId(1L)
                                                 }
 
                                                 x == 1 && y == 1 -> {
-                                                    updateSelectedNoteId(8L)
+                                                    updateSelectedNoteId(2L)
                                                 }
 
                                                 x == 1 && y == 2 -> {
-                                                    updateSelectedNoteId(9L)
+                                                    updateSelectedNoteId(3L)
                                                 }
 
                                                 x == 2 && y == 0 -> {
-                                                    updateSelectedNoteId(10L)
+                                                    updateSelectedNoteId(4L)
                                                 }
 
                                                 x == 2 && y == 1 -> {
 //                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
-                                                    updateSelectedNoteId(11L)
+                                                    updateSelectedNoteId(5L)
                                                 }
 
                                                 x == 2 && y == 2 -> {
-                                                    updateSelectedNoteId(12L)
+                                                    updateSelectedNoteId(6L)
                                                 }
                                             }
-                                        }) {
-                                        //On Click
-                                        when {
-                                            x == 1 && y == 0 -> {
-                                                updateSelectedNoteId(1L)
-                                            }
-
-                                            x == 1 && y == 1 -> {
-                                                updateSelectedNoteId(2L)
-                                            }
-
-                                            x == 1 && y == 2 -> {
-                                                updateSelectedNoteId(3L)
-                                            }
-
-                                            x == 2 && y == 0 -> {
-                                                updateSelectedNoteId(4L)
-                                            }
-
-                                            x == 2 && y == 1 -> {
-//                                                navController.navigate("add_note_screen?id=${5}/isFixed=true")
-                                                updateSelectedNoteId(5L)
-                                            }
-
-                                            x == 2 && y == 2 -> {
-                                                updateSelectedNoteId(6L)
-                                            }
-                                        }
-                                    })
+                                        })
+                                }
                             }
                         }
                     }
                 }
             }
-
 
 
             LazyVerticalStaggeredGrid(

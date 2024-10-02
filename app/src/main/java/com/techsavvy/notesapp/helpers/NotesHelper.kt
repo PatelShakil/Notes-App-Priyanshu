@@ -13,6 +13,20 @@ class NotesPreferences(context: Context) {
     private val fixedSelectedNoteId = context.getSharedPreferences("fixed_selected_note_id", Context.MODE_PRIVATE)
     private val isDarkMode = context.getSharedPreferences("is_dark_mode", Context.MODE_PRIVATE)
     private val defaultFixed = context.getSharedPreferences("default_fixed", Context.MODE_PRIVATE)
+    private val isFixedOn = context.getSharedPreferences("is_fixed_on",Context.MODE_PRIVATE)
+
+
+    fun saveIsFixedOn(isFixedOn: Boolean) {
+        val editor = this.isFixedOn.edit()
+        editor.putBoolean("is_fixed_on", isFixedOn)
+        editor.apply()
+    }
+    fun getIsFixedOn(): Boolean {
+        return isFixedOn.getBoolean("is_fixed_on",false)
+    }
+
+
+
 
     fun saveDefaultFixed(defaultFixed: Int) {
         val editor = this.defaultFixed.edit()

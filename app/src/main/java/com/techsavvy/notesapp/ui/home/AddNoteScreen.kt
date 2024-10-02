@@ -107,8 +107,7 @@ fun AddNoteScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -247,7 +246,7 @@ fun showHighPriorityNotification(context: Context, title: String, content: Strin
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
     val notification = NotificationCompat.Builder(context, "notes_channel")
-        .setSmallIcon(R.drawable.ic_notification)
+        .setSmallIcon(R.drawable.transparent_ic)
         .setContentTitle(title)
         .setContentText(content)
         .setPriority(NotificationCompat.PRIORITY_LOW)
