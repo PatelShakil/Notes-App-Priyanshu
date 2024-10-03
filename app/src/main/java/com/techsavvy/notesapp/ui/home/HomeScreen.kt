@@ -446,19 +446,19 @@ fun NoteItemGrid(note: Note, onClick: () -> Unit, onLongClick: () -> Unit) {
                     .padding(10.dp)
                     .padding(vertical = 5.dp)
             ) {
-                Text(
-                    text = SimpleDateFormat(
-                        "MMM dd yyyy ",
-                        Locale.getDefault()
-                    ).format(Date(note.timestamp)),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Start,
-                    color = Color.Gray,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold
-
-                )
+//                Text(
+//                    text = SimpleDateFormat(
+//                        "MMM dd yyyy ",
+//                        Locale.getDefault()
+//                    ).format(Date(note.timestamp)),
+//                    style = MaterialTheme.typography.bodySmall,
+//                    modifier = Modifier.fillMaxWidth(),
+//                    textAlign = TextAlign.Start,
+//                    color = Color.Gray,
+//                    fontSize = 10.sp,
+//                    fontWeight = FontWeight.SemiBold
+//
+//                )
                 Text(
                     text = note.title, style = MaterialTheme.typography.bodyLarge, maxLines = 2,
                     fontWeight = FontWeight.SemiBold,
